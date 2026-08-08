@@ -1,6 +1,7 @@
 import { CalendarDays, MapPin } from 'lucide-react'
 import type { Issue } from '@/lib/db'
 import { StatusBadge } from '@/components/status-badge'
+import { AdminControls } from '@/components/admin-controls'
 
 function formatDate(value: string) {
   const d = new Date(value)
@@ -8,7 +9,7 @@ function formatDate(value: string) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-export function IssueCard({ issue }: { issue: Issue }) {
+export function IssueCard({ issue, isAdmin = false }: { issue: Issue; isAdmin?: boolean }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-colors hover:border-primary/40">
       {issue.photo_pathname ? (
@@ -46,6 +47,8 @@ export function IssueCard({ issue }: { issue: Issue }) {
             Observed {formatDate(issue.issue_date)}
           </span>
         </div>
+
+        {isAdmin && <AdminControls issue={issue} />}
       </div>
     </article>
   )

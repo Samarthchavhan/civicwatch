@@ -1,16 +1,21 @@
-import { ClipboardList, ShieldCheck } from 'lucide-react'
+import Link from 'next/link'
+import { ClipboardList, Lock, ShieldCheck } from 'lucide-react'
 import { getIssues, getStats } from '@/lib/db'
+import { isAdmin } from '@/lib/admin'
 import { IssueCard } from '@/components/issue-card'
 import { StatsBar } from '@/components/stats-bar'
 import { ReportPanel } from '@/components/report-panel'
+import { AdminBar } from '@/components/admin-bar'
 
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  const [issues, stats] = await Promise.all([getIssues(), getStats()])
+  const [issues, stats, admin] = await Promise.all([getIssues(), getStats(), isAdmin()])
 
   return (
     <div className="min-h-screen">
+      {admin && <AdminBar />}
+
       {/* Top nav */}
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
@@ -99,17 +104,26 @@ export default async function Page() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {issues.map((issue) => (
-              <IssueCard key={issue.id} issue={issue} />
+              <IssueCard key={issue.id} issue={issue} isAdmin={admin} />
             ))}
           </div>
         )}
       </main>
 
       <footer className="border-t border-border/60 py-8">
-        <p className="mx-auto max-w-6xl px-4 text-center text-xs text-muted-foreground sm:px-6">
-          CivicWatch — community infrastructure reporting for Kalyan. Reports are reviewed by your
-          local public works department.
-        </p>
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-center sm:px-6">
+          <p className="text-xs text-muted-foreground">
+            CivicWatch — community infrastructure reporting for Kalyan. Reports are reviewed by your
+            local public works department.
+          </p>
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground/70 transition-colors hover:text-foreground"
+          >
+            <Lock className="size-3" aria-hidden="true" />
+            {admin ? 'Admin dashboard' : 'Admin access'}
+          </Link>
+        </div>
       </footer>
     </div>
   )
