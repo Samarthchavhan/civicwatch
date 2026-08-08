@@ -41,34 +41,43 @@
 }
 
 :root {
-  color-scheme: light;
-  --background: oklch(0.97 0.006 247);
-  --foreground: oklch(0.24 0.03 258);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.03 258);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.03 258);
-  --primary: oklch(0.43 0.12 250);
-  --primary-foreground: oklch(0.98 0.005 247);
-  --secondary: oklch(0.93 0.012 250);
-  --secondary-foreground: oklch(0.32 0.04 255);
-  --muted: oklch(0.94 0.008 250);
-  --muted-foreground: oklch(0.5 0.02 256);
-  --accent: oklch(0.91 0.03 250);
-  --accent-foreground: oklch(0.3 0.06 255);
-  --destructive: oklch(0.55 0.2 27);
-  --border: oklch(0.89 0.01 253);
-  --input: oklch(0.89 0.01 253);
-  --ring: oklch(0.43 0.12 250);
+  color-scheme: dark;
 
-  --status-pending: oklch(0.92 0.06 85);
-  --status-pending-foreground: oklch(0.42 0.09 70);
-  --status-filed: oklch(0.9 0.05 250);
-  --status-filed-foreground: oklch(0.4 0.12 255);
-  --status-resolved: oklch(0.9 0.07 155);
-  --status-resolved-foreground: oklch(0.38 0.09 155);
+  /* Deep charcoal / near-black canvas with dark-slate surfaces */
+  --background: oklch(0.15 0.004 260);
+  --foreground: oklch(0.97 0.002 260);
+  --card: oklch(0.2 0.005 260);
+  --card-foreground: oklch(0.96 0.002 260);
+  --popover: oklch(0.19 0.005 260);
+  --popover-foreground: oklch(0.96 0.002 260);
 
-  --radius: 0.5rem;
+  /* Warm amber primary for interactive elements */
+  --primary: oklch(0.82 0.15 75);
+  --primary-foreground: oklch(0.2 0.03 70);
+
+  --secondary: oklch(0.26 0.006 260);
+  --secondary-foreground: oklch(0.94 0.002 260);
+  --muted: oklch(0.24 0.005 260);
+  --muted-foreground: oklch(0.68 0.006 260);
+
+  /* Electric mint accent */
+  --accent: oklch(0.85 0.16 172);
+  --accent-foreground: oklch(0.2 0.04 172);
+
+  --destructive: oklch(0.62 0.2 22);
+  --border: oklch(0.28 0.006 260);
+  --input: oklch(0.3 0.006 260);
+  --ring: oklch(0.82 0.15 75);
+
+  /* Status colors: translucent tints with bright, high-contrast text */
+  --status-pending: oklch(0.28 0.06 75);
+  --status-pending-foreground: oklch(0.86 0.14 82);
+  --status-filed: oklch(0.28 0.06 220);
+  --status-filed-foreground: oklch(0.83 0.13 218);
+  --status-resolved: oklch(0.28 0.06 168);
+  --status-resolved-foreground: oklch(0.86 0.15 168);
+
+  --radius: 0.75rem;
 }
 
 @layer base {

@@ -10,13 +10,13 @@ function formatDate(value: string) {
 
 export function IssueCard({ issue }: { issue: Issue }) {
   return (
-    <article className="flex flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+    <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-colors hover:border-primary/40">
       {issue.photo_pathname ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={`/api/file?pathname=${encodeURIComponent(issue.photo_pathname)}`}
           alt={`Reported issue at ${issue.location}`}
-          className="h-44 w-full bg-muted object-cover"
+          className="h-44 w-full bg-muted object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
       ) : (
         <div className="flex h-44 w-full items-center justify-center bg-muted text-sm text-muted-foreground">

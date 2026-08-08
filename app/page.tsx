@@ -1,91 +1,114 @@
 import { ClipboardList, ShieldCheck } from 'lucide-react'
-import { getIssues } from '@/lib/db'
-import { ReportForm } from '@/components/report-form'
+import { getIssues, getStats } from '@/lib/db'
 import { IssueCard } from '@/components/issue-card'
+import { StatsBar } from '@/components/stats-bar'
+import { ReportPanel } from '@/components/report-panel'
 
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  const issues = await getIssues()
-
-  const counts = {
-    total: issues.length,
-    pending: issues.filter((i) => i.status === 'Pending').length,
-    filed: issues.filter((i) => i.status === 'Officially Filed').length,
-    resolved: issues.filter((i) => i.status === 'Resolved').length,
-  }
+  const [issues, stats] = await Promise.all([getIssues(), getStats()])
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border bg-primary text-primary-foreground">
-        <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 sm:px-6">
+      {/* Top nav */}
+      <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
           <div className="flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-md bg-primary-foreground/15">
-              <ShieldCheck className="size-5" aria-hidden="true" />
+            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <ShieldCheck className="size-4.5" aria-hidden="true" />
             </span>
-            <span className="font-heading text-lg font-bold tracking-tight">CivicWatch</span>
+            <span className="font-heading text-base font-bold tracking-tight text-foreground">
+              CivicWatch
+            </span>
           </div>
-          <div className="max-w-2xl">
-            <h1 className="text-balance font-heading text-3xl font-bold leading-tight sm:text-4xl">
-              Report a pothole. Track it to resolution.
-            </h1>
-            <p className="mt-2 text-pretty text-sm leading-relaxed text-primary-foreground/80 sm:text-base">
-              Submit local infrastructure issues with a photo, location, and date. Every report is
-              logged publicly and moves from Pending to Officially Filed to Resolved.
-            </p>
-          </div>
+          <ReportPanel />
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-5xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[380px_1fr] lg:items-start">
-        <section
-          aria-labelledby="report-heading"
-          className="rounded-xl border border-border bg-card p-5 shadow-sm lg:sticky lg:top-6"
-        >
-          <div className="mb-5 flex items-center gap-2">
-            <ClipboardList className="size-5 text-primary" aria-hidden="true" />
-            <h2 id="report-heading" className="font-heading text-lg font-bold text-card-foreground">
-              File a new report
-            </h2>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border/60">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-70"
+          style={{
+            background:
+              'radial-gradient(60% 55% at 20% 0%, oklch(0.82 0.15 75 / 0.14), transparent 70%), radial-gradient(55% 50% at 90% 20%, oklch(0.85 0.16 172 / 0.12), transparent 70%)',
+          }}
+        />
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
+            <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
+            Serving the residents of Kalyan
+          </span>
+          <h1 className="mt-5 max-w-3xl text-balance font-heading text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            CivicWatch: Local Accountability,{' '}
+            <span className="text-primary">Tracked Real-Time</span>
+          </h1>
+          <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Report potholes and broken infrastructure across Kalyan in seconds. Every submission is
+            logged publicly and tracked from Pending to Officially Filed to Resolved — so nothing
+            slips through the cracks.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <ReportPanel variant="hero" label="Report an issue" />
+            <a
+              href="#feed"
+              className="inline-flex h-11 items-center rounded-md border border-border px-5 text-sm font-semibold text-foreground transition-colors hover:bg-card"
+            >
+              View the feed
+            </a>
           </div>
-          <ReportForm />
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="feed-heading" className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 id="feed-heading" className="font-heading text-xl font-bold text-foreground">
+      {/* Stats bar */}
+      <section aria-label="Overview statistics" className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <StatsBar stats={stats} />
+      </section>
+
+      {/* Feed */}
+      <main id="feed" className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground">
               Community reports
             </h2>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-muted-foreground">
-              <span>{counts.total} total</span>
-              <span className="text-status-pending-foreground">{counts.pending} pending</span>
-              <span className="text-status-filed-foreground">{counts.filed} filed</span>
-              <span className="text-status-resolved-foreground">{counts.resolved} resolved</span>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Live feed of infrastructure issues reported across the city.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-muted-foreground">
+            <span className="text-status-pending-foreground">{stats.pending} pending</span>
+            <span className="text-status-filed-foreground">{stats.filed} filed</span>
+            <span className="text-status-resolved-foreground">{stats.resolved} resolved</span>
+          </div>
+        </div>
+
+        {issues.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card/40 px-6 py-20 text-center">
+            <ClipboardList className="size-9 text-muted-foreground" aria-hidden="true" />
+            <p className="font-heading text-lg font-semibold text-foreground">No reports yet</p>
+            <p className="max-w-xs text-sm text-muted-foreground">
+              Be the first to report an issue in your neighborhood.
+            </p>
+            <div className="mt-2">
+              <ReportPanel label="File the first report" />
             </div>
           </div>
-
-          {issues.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-card/50 px-6 py-16 text-center">
-              <ClipboardList className="size-8 text-muted-foreground" aria-hidden="true" />
-              <p className="font-medium text-foreground">No reports yet</p>
-              <p className="max-w-xs text-sm text-muted-foreground">
-                Be the first to report an issue in your neighborhood using the form.
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {issues.map((issue) => (
-                <IssueCard key={issue.id} issue={issue} />
-              ))}
-            </div>
-          )}
-        </section>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {issues.map((issue) => (
+              <IssueCard key={issue.id} issue={issue} />
+            ))}
+          </div>
+        )}
       </main>
 
-      <footer className="border-t border-border py-6">
-        <p className="mx-auto max-w-5xl px-4 text-center text-xs text-muted-foreground sm:px-6">
-          CivicWatch is a community reporting tool. Reports are reviewed by your local public works
-          department.
+      <footer className="border-t border-border/60 py-8">
+        <p className="mx-auto max-w-6xl px-4 text-center text-xs text-muted-foreground sm:px-6">
+          CivicWatch — community infrastructure reporting for Kalyan. Reports are reviewed by your
+          local public works department.
         </p>
       </footer>
     </div>

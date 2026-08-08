@@ -31,7 +31,7 @@ const inputClass =
 
 const labelClass = 'text-sm font-semibold text-foreground'
 
-export function ReportForm() {
+export function ReportForm({ onSuccess }: { onSuccess?: () => void }) {
   const [state, formAction] = useActionState<SubmitState, FormData>(submitIssue, null)
   const formRef = useRef<HTMLFormElement>(null)
   const [preview, setPreview] = useState<string | null>(null)
@@ -42,8 +42,10 @@ export function ReportForm() {
     if (state?.ok) {
       formRef.current?.reset()
       setPreview(null)
+      const timer = setTimeout(() => onSuccess?.(), 1200)
+      return () => clearTimeout(timer)
     }
-  }, [state])
+  }, [state, onSuccess])
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
