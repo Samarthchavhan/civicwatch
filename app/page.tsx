@@ -46,10 +46,10 @@ export default async function Page() {
             <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
             Serving the residents of Kalyan
           </span>
-          <h1 className="mt-5 max-w-3xl text-balance font-heading text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <span className="inline-block mt-5 max-w-3xl text-balance font-heading text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             CivicWatch: Local Accountability,{' '}
             <span className="text-primary">Tracked Real-Time</span>
-          </h1>
+          </span>
           <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Report potholes and broken infrastructure across Kalyan in seconds. Every submission is
             logged publicly and tracked from Pending to Officially Filed to Resolved — so nothing
@@ -103,8 +103,8 @@ export default async function Page() {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {issues.map((issue) => (
-              <IssueCard key={issue.id} issue={issue} isAdmin={admin} />
+            {issues.map((issue, index) => (
+              <IssueCard key={issue.id} issue={issue} index={index} isAdmin={admin} />
             ))}
           </div>
         )}

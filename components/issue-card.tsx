@@ -9,7 +9,7 @@ function formatDate(value: string) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-export function IssueCard({ issue, isAdmin = false }: { issue: Issue; isAdmin?: boolean }) {
+export function IssueCard({ issue, index = 0, isAdmin = false }: { issue: Issue; index?: number; isAdmin?: boolean }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-colors hover:border-primary/40">
       {issue.photo_pathname ? (
@@ -28,7 +28,7 @@ export function IssueCard({ issue, isAdmin = false }: { issue: Issue; isAdmin?: 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <span className="font-heading text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Report #{String(issue.id).padStart(4, '0')}
+            Report #{String(index + 1).padStart(4, '0')}
           </span>
           <StatusBadge status={issue.status} />
         </div>
