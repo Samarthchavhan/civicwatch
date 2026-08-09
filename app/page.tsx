@@ -46,6 +46,7 @@ export default async function Page() {
             <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
             Serving the residents of Kalyan
           </span>
+
           <span className="inline-block mt-5 max-w-3xl text-balance font-heading text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             CivicWatch: Local Accountability,{' '}
             <span className="text-primary">Tracked Real-Time</span>
