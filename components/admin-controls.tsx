@@ -79,7 +79,7 @@ export function AdminControls({ issue }: { issue: Issue & { complaint_no?: strin
           disabled={isPending}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted disabled:opacity-50"
         >
-          {saved ? <Check className="size-3 text-status-resolved-foreground" /> : 'Save'}
+          {saved ? <Check className="size-3 text-green-600 dark:text-green-400" /> : 'Save'}
         </button>
       </form>
 

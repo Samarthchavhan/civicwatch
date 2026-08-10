@@ -7,7 +7,7 @@ export function IssueCard({ issue, isAdmin }: { issue: Issue & { complaint_no?: 
 
   return (
     <div className="flex flex-col rounded-xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-md">
-      {/* Image Section: Agar photo nahi hai toh box hide ho jayega, faltu "No photo" nahi dikhega */}
+      {/* Image Section */}
       {issue.photo_pathname && (
         <div className="relative aspect-video w-full overflow-hidden bg-muted">
           <img
@@ -19,7 +19,7 @@ export function IssueCard({ issue, isAdmin }: { issue: Issue & { complaint_no?: 
       )}
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        {/* Header row: Status Badge & Complaint Number Badge (Sabhi users ko dikhega) */}
+        {/* Header row: Status & Complaint Reference */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
             issue.status === 'Resolved' 
@@ -44,7 +44,7 @@ export function IssueCard({ issue, isAdmin }: { issue: Issue & { complaint_no?: 
           {issue.description}
         </p>
 
-        {/* Location and Date Metadata */}
+        {/* Metadata */}
         <div className="mt-auto space-y-1.5 text-xs text-muted-foreground border-t border-border/40 pt-3">
           <div className="flex items-center gap-1.5">
             <MapPin className="size-3.5 shrink-0 text-muted-foreground/70" />
@@ -56,7 +56,6 @@ export function IssueCard({ issue, isAdmin }: { issue: Issue & { complaint_no?: 
           </div>
         </div>
 
-        {/* Admin Controls (Only visible if logged in as admin) */}
         {isAdmin && <AdminControls issue={issue} />}
       </div>
     </div>
