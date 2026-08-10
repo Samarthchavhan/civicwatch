@@ -1,65 +1,64 @@
-import { CalendarDays, MapPin, FileText } from 'lucide-react'
 import type { Issue } from '@/lib/db'
-import { StatusBadge } from '@/components/status-badge'
 import { AdminControls } from '@/components/admin-controls'
+import { MapPin, Calendar, FileText } from 'lucide-react'
 
-function formatDate(value: string) {
-  const d = new Date(value)
-  if (Number.isNaN(d.getTime())) return value
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-}
-
-export function IssueCard({ issue, index = 0, isAdmin = false }: { issue: Issue & { complaint_no?: string; complaintNo?: string }; index?: number; isAdmin?: boolean }) {
+export function IssueCard({ issue, isAdmin }: { issue: Issue & { complaint_no?: string; complaintNo?: string }; isAdmin: boolean }) {
   const complaintReference = issue.complaint_no || issue.complaintNo
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-colors hover:border-primary/40">
-      {issue.photo_pathname ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={`/api/file?pathname=${encodeURIComponent(issue.photo_pathname)}`}
-          alt={`Reported issue at ${issue.location}`}
-          className="h-44 w-full bg-muted object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-        />
-      ) : (
-        <div className="flex h-44 w-full items-center justify-center bg-muted text-sm text-muted-foreground">
-          No photo provided
+    <div className="flex flex-col rounded-xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-md">
+      {/* Image Section: Agar photo nahi hai toh box hide ho jayega, faltu "No photo" nahi dikhega */}
+      {issue.photo_pathname && (
+        <div className="relative aspect-video w-full overflow-hidden bg-muted">
+          <img
+            src={`/api/placeholder-image?path=${issue.photo_pathname}`}
+            alt="Reported issue"
+            className="h-full w-full object-cover"
+          />
         </div>
       )}
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <span className="font-heading text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Report #{String(index + 1).padStart(4, '0')}
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        {/* Header row: Status Badge & Complaint Number Badge (Sabhi users ko dikhega) */}
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+            issue.status === 'Resolved' 
+              ? 'bg-green-500/10 text-green-600 dark:text-green-400' 
+              : issue.status === 'Officially Filed' 
+              ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' 
+              : 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
+          }`}>
+            {issue.status}
           </span>
-          <div className="flex items-center gap-2">
-            {complaintReference && (
-              <span className="inline-flex items-center gap-1 rounded bg-muted px-2 py-0.5 text-xs font-mono font-semibold text-foreground">
-                <FileText className="size-3 text-muted-foreground" aria-hidden="true" />
-                {complaintReference}
-              </span>
-            )}
-            <StatusBadge status={issue.status} />
-          </div>
+
+          {complaintReference && (
+            <div className="inline-flex items-center gap-1 rounded-md bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+              <FileText className="size-3" />
+              <span>Ref: {complaintReference}</span>
+            </div>
+          )}
         </div>
 
-        <p className="text-pretty text-sm leading-relaxed text-card-foreground">
+        {/* Description */}
+        <p className="text-sm font-medium text-foreground leading-relaxed mb-4">
           {issue.description}
         </p>
 
-        <div className="mt-auto flex flex-col gap-1.5 border-t border-border pt-3 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
-            <span className="text-foreground">{issue.location}</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CalendarDays className="size-3.5 shrink-0" aria-hidden="true" />
-            Observed {formatDate(issue.issue_date)}
-          </span>
+        {/* Location and Date Metadata */}
+        <div className="mt-auto space-y-1.5 text-xs text-muted-foreground border-t border-border/40 pt-3">
+          <div className="flex items-center gap-1.5">
+            <MapPin className="size-3.5 shrink-0 text-muted-foreground/70" />
+            <span className="truncate">{issue.location}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="size-3.5 shrink-0 text-muted-foreground/70" />
+            <span>Observed {issue.issue_date}</span>
+          </div>
         </div>
 
+        {/* Admin Controls (Only visible if logged in as admin) */}
         {isAdmin && <AdminControls issue={issue} />}
       </div>
-    </article>
+    </div>
   )
 }

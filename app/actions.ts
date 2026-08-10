@@ -122,3 +122,23 @@ export async function deleteIssue(id: number): Promise<AdminActionResult> {
   revalidatePath('/')
   return { ok: true }
 }
+export async function updateComplaintNo(
+  id: number,
+  complaintNo: string,
+): Promise<AdminActionResult> {
+  if (!(await isAdmin())) return { ok: false, error: 'Unauthorized' }
+
+  try {
+    await sql`
+      UPDATE issues
+      SET complaint_no = ${complaintNo.trim()}
+      WHERE id = ${id}
+    `
+  } catch (error) {
+    console.log('[v0] updateComplaintNo error:', error)
+    return { ok: false, error: 'Could not update the complaint number.' }
+  }
+
+  revalidatePath('/')
+  return { ok: true }
+}
