@@ -11,6 +11,7 @@ export type Issue = {
   issue_date: string
   photo_pathname: string | null
   status: IssueStatus
+  complaint_no: string | null
   created_at: string
   resolved_at: string | null
 }
@@ -25,7 +26,7 @@ export type Stats = {
 
 export async function getIssues(): Promise<Issue[]> {
   const rows = await sql`
-    SELECT id, description, location, issue_date, photo_pathname, status, created_at, resolved_at
+    SELECT id, description, location, issue_date, photo_pathname, status, complaint_no, created_at, resolved_at
     FROM issues
     ORDER BY created_at DESC
   `
