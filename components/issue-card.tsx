@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin } from 'lucide-react'
+import { CalendarDays, MapPin, FileText } from 'lucide-react'
 import type { Issue } from '@/lib/db'
 import { StatusBadge } from '@/components/status-badge'
 import { AdminControls } from '@/components/admin-controls'
@@ -9,7 +9,9 @@ function formatDate(value: string) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-export function IssueCard({ issue, index = 0, isAdmin = false }: { issue: Issue; index?: number; isAdmin?: boolean }) {
+export function IssueCard({ issue, index = 0, isAdmin = false }: { issue: Issue & { complaint_no?: string; complaintNo?: string }; index?: number; isAdmin?: boolean }) {
+  const complaintReference = issue.complaint_no || issue.complaintNo
+
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-colors hover:border-primary/40">
       {issue.photo_pathname ? (
@@ -30,7 +32,15 @@ export function IssueCard({ issue, index = 0, isAdmin = false }: { issue: Issue;
           <span className="font-heading text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Report #{String(index + 1).padStart(4, '0')}
           </span>
-          <StatusBadge status={issue.status} />
+          <div className="flex items-center gap-2">
+            {complaintReference && (
+              <span className="inline-flex items-center gap-1 rounded bg-muted px-2 py-0.5 text-xs font-mono font-semibold text-foreground">
+                <FileText className="size-3 text-muted-foreground" aria-hidden="true" />
+                {complaintReference}
+              </span>
+            )}
+            <StatusBadge status={issue.status} />
+          </div>
         </div>
 
         <p className="text-pretty text-sm leading-relaxed text-card-foreground">

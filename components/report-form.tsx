@@ -63,16 +63,18 @@ export function ReportForm({ onSuccess }: { onSuccess?: () => void }) {
     <form ref={formRef} action={formAction} className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <span className={labelClass}>Photo of the issue</span>
-        <label
-          htmlFor="photo"
+        <div
+          onClick={() => fileInputRef.current?.click()}
           className={cn(
             'group relative flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-md border border-dashed border-input bg-muted/40 px-4 py-6 text-center transition-colors hover:border-ring hover:bg-muted',
-            preview && 'border-solid p-0',
+            preview && 'border-solid p-0 min-h-0',
           )}
         >
           {preview ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={preview || '/placeholder.svg'} alt="Preview of the issue you are reporting" className="h-56 w-full object-cover" />
+            <div className="relative w-full h-56">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={preview} alt="Preview of the issue you are reporting" className="h-full w-full object-cover" />
+            </div>
           ) : (
             <>
               <ImagePlus className="size-7 text-muted-foreground" aria-hidden="true" />
@@ -87,10 +89,10 @@ export function ReportForm({ onSuccess }: { onSuccess?: () => void }) {
             type="file"
             accept="image/*"
             capture="environment"
-            className="sr-only"
+            className="hidden"
             onChange={onFileChange}
           />
-        </label>
+        </div>
         {preview && (
           <button
             type="button"
@@ -112,7 +114,7 @@ export function ReportForm({ onSuccess }: { onSuccess?: () => void }) {
           name="description"
           required
           rows={3}
-          placeholder="Describe the pothole — size, depth, and any hazard it poses."
+          placeholder="Describe the issue — size, depth, and any hazard it poses."
           className={cn(inputClass, 'resize-none leading-relaxed')}
         />
       </div>
@@ -130,7 +132,7 @@ export function ReportForm({ onSuccess }: { onSuccess?: () => void }) {
             id="location"
             name="location"
             required
-            placeholder="e.g. Corner of 5th Ave & Main St, northbound lane"
+            placeholder="e.g. Nandivali, Talav Road, Kalyan East"
             className={cn(inputClass, 'pl-9')}
           />
         </div>
